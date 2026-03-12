@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Size Recommender Dev Demo</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+        background: #f3efe8;
+        color: #10203c;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at top left, rgba(255, 255, 255, 0.8), transparent 40%),
+          linear-gradient(180deg, #f7f1e7 0%, #eef2f8 100%);
+      }
+
+      main {
+        margin: 0 auto;
+        max-width: 1100px;
+        padding: 48px 20px 72px;
+      }
+
+      .shell {
+        display: grid;
+        gap: 24px;
+      }
+
+      .hero {
+        background: rgba(255, 255, 255, 0.75);
+        border: 1px solid rgba(16, 32, 60, 0.08);
+        border-radius: 32px;
+        box-shadow: 0 18px 50px rgba(16, 32, 60, 0.08);
+        display: grid;
+        gap: 18px;
+        grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.95fr);
+        padding: 28px;
+      }
+
+      .product-stage {
+        background:
+          linear-gradient(130deg, rgba(245, 231, 214, 0.95), rgba(210, 221, 228, 0.55)),
+          linear-gradient(180deg, #f0e7dc, #dbe4ee);
+        border-radius: 24px;
+        min-height: 360px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .product-stage::before,
+      .product-stage::after {
+        content: "";
+        position: absolute;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.4);
+      }
+
+      .product-stage::before {
+        height: 420px;
+        right: -120px;
+        top: -100px;
+        width: 420px;
+      }
+
+      .product-stage::after {
+        height: 240px;
+        left: -60px;
+        bottom: -80px;
+        width: 240px;
+      }
+
+      .product-copy {
+        align-content: start;
+        display: grid;
+        gap: 16px;
+      }
+
+      .eyebrow {
+        color: #55657f;
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        margin: 0;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 4vw, 3rem);
+        line-height: 1;
+        letter-spacing: -0.04em;
+        margin: 0;
+      }
+
+      .subhead {
+        color: #485a76;
+        font-size: 1.02rem;
+        line-height: 1.6;
+        margin: 0;
+        max-width: 58ch;
+      }
+
+      .selection {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        width: fit-content;
+        background: #10203c;
+        border-radius: 999px;
+        color: white;
+        padding: 12px 16px;
+      }
+
+      .selection span:last-child {
+        background: rgba(255, 255, 255, 0.14);
+        border-radius: 999px;
+        padding: 6px 10px;
+      }
+
+      .controls {
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid rgba(16, 32, 60, 0.08);
+        border-radius: 24px;
+        padding: 22px;
+      }
+
+      .controls h2 {
+        font-size: 1.1rem;
+        margin: 0 0 16px;
+      }
+
+      .field-grid {
+        display: grid;
+        gap: 14px;
+      }
+
+      label {
+        color: #41536f;
+        display: grid;
+        font-size: 0.92rem;
+        font-weight: 600;
+        gap: 8px;
+      }
+
+      input,
+      select,
+      button {
+        border: 1px solid #d4dcea;
+        border-radius: 14px;
+        color: #10203c;
+        font: inherit;
+        min-height: 46px;
+        padding: 0 14px;
+      }
+
+      button {
+        background: #10203c;
+        border-color: #10203c;
+        color: white;
+        cursor: pointer;
+        font-weight: 700;
+      }
+
+      button.secondary {
+        background: white;
+        color: #10203c;
+      }
+
+      .button-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .hint {
+        color: #607089;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin: 14px 0 0;
+      }
+
+      .widget-panel {
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid rgba(16, 32, 60, 0.08);
+        border-radius: 24px;
+        max-width: 380px;
+        padding: 24px;
+      }
+
+      .widget-panel h2 {
+        font-size: 1rem;
+        margin: 0 0 14px;
+      }
+
+      @media (max-width: 900px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+
+        .product-stage {
+          min-height: 240px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="shell">
+        <section class="hero">
+          <div class="product-stage" aria-hidden="true"></div>
+
+          <div class="product-copy">
+            <p class="eyebrow">Local Dev Demo</p>
+            <h1>Returns Portal PDP</h1>
+            <p class="subhead">
+              This page loads the local widget bundle from <code>/dist</code> and
+              fetches live recommendation data from the staging product API.
+            </p>
+            <div class="selection">
+              <span>Selected size</span>
+              <span>32 / 32</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="controls">
+          <h2>Widget Controls</h2>
+          <div class="field-grid">
+            <label>
+              Article name
+              <input
+                id="article-name"
+                name="articleName"
+                value="Men's Iver Pants (tailored fit)"
+              />
+            </label>
+
+            <label>
+              Account ID
+              <input
+                id="account-id"
+                name="accountId"
+                inputmode="numeric"
+                value="1619650"
+              />
+            </label>
+
+            <label>
+              404 mode
+              <select id="not-found-mode" name="notFoundMode">
+                <option value="true-to-size">Fallback to likely true to size</option>
+                <option value="empty">Show no data available</option>
+              </select>
+            </label>
+
+            <label>
+              Appearance
+              <select id="appearance" name="appearance">
+                <option value="neutral">Neutral</option>
+                <option value="colored">Colored</option>
+              </select>
+            </label>
+
+            <label>
+              Density
+              <select id="density" name="density">
+                <option value="compact">Compact</option>
+                <option value="comfortable">Comfortable</option>
+              </select>
+            </label>
+
+            <label>
+              Surface
+              <select id="surface" name="surface">
+                <option value="subtle">Subtle card</option>
+                <option value="plain">Plain inline</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="button-row">
+            <button id="render-widget" type="button">Render widget</button>
+            <button id="simulate-missing" class="secondary" type="button">
+              Simulate 404 article
+            </button>
+          </div>
+
+          <p class="hint">
+            Default values match your sample API call. Edit the article and re-render
+            to test other products or the configurable 404 behavior.
+          </p>
+        </section>
+
+        <section class="widget-panel">
+          <h2>Embedded widget</h2>
+          <div id="size-recommender-demo"></div>
+        </section>
+      </div>
+    </main>
+
+    <script src="/dist/size-recommender.iife.js"></script>
+    <script src="/dev/main.js"></script>
+  </body>
+</html>
