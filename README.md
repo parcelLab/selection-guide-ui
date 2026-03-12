@@ -14,6 +14,14 @@ Build output:
 - `dist/size-recommender.iife.js` for `<script>` embeds
 - `dist/size-recommender.esm.js` for module consumers
 
+GitHub Pages demo build:
+
+```sh
+npm run build:pages
+```
+
+This writes a static demo site to `site/`.
+
 ## Dev Demo
 
 ```sh
@@ -27,6 +35,13 @@ Open [http://localhost:4173](http://localhost:4173). The demo page uses your sam
 
 The page loads the local IIFE bundle and initializes the widget via
 `window.SizeRecommender.init(...)`.
+
+## GitHub Pages Demo
+
+The repository is configured to publish the demo page with GitHub Pages from a
+custom GitHub Actions workflow. After deployment, the project site URL is:
+
+`https://jkrenge.github.io/size-recommender-ui/`
 
 ## HTML Embed
 

@@ -1,6 +1,6 @@
 {
   "name": "@jkrenge/size-recommender-ui",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Embeddable size recommender widget for retailer PDPs.",
   "type": "module",
   "license": "MIT",
@@ -16,6 +16,7 @@
   ],
   "scripts": {
     "build": "rm -rf dist && node scripts/build.mjs && tsc -p tsconfig.types.json",
+    "build:pages": "node scripts/build-pages.mjs",
     "dev": "node scripts/dev.mjs",
     "test": "vitest run --environment jsdom"
   },
