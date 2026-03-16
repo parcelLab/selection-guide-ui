@@ -99,7 +99,7 @@ widget.update({
 | `locale` | `string` | Defaults to `en` |
 | `messages` | `Partial<WidgetMessages>` | Localization and copy overrides |
 | `notFoundMode` | `'empty' \| 'true-to-size'` | Controls 404 fallback behavior |
-| `apiBaseUrl` | `string` | Defaults to the staging API base URL |
+| `apiBaseUrl` | `string` | Defaults to the production API base URL |
 | `appearance` | `'neutral' \| 'colored'` | `neutral` is the compact grayscale default |
 | `density` | `'compact' \| 'comfortable'` | `compact` is the default for sidebar placements |
 | `surface` | `'subtle' \| 'plain'` | `subtle` adds a light card, `plain` renders inline |
