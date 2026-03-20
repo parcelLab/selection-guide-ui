@@ -116,17 +116,22 @@
         background: rgba(255, 255, 255, 0.72);
         border: 1px solid rgba(16, 32, 60, 0.08);
         border-radius: 24px;
-        max-width: 380px;
         padding: 24px;
+      }
+
+      .preview-stack {
+        display: grid;
+        gap: 16px;
+        max-width: 380px;
       }
 
       .widget-panel h2 {
         font-size: 1rem;
-        margin: 0 0 14px;
+        margin: 0;
       }
 
       .widget-preview {
-        margin-bottom: 18px;
+        margin-top: 14px;
       }
 
       .embed-preview-title {
@@ -136,6 +141,68 @@
         letter-spacing: 0.02em;
         margin: 0 0 8px;
         text-transform: uppercase;
+      }
+
+      .card-header {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .card-subtitle {
+        color: #607089;
+        font-size: 0.84rem;
+        line-height: 1.45;
+        margin: 8px 0 0;
+      }
+
+      .code-card-actions {
+        align-items: center;
+        display: flex;
+        gap: 10px;
+      }
+
+      .mode-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 16px 0 12px;
+      }
+
+      button.mode-pill {
+        background: white;
+        color: #41536f;
+      }
+
+      button.mode-pill.is-active {
+        background: #10203c;
+        border-color: #10203c;
+        color: white;
+      }
+
+      button.icon-button {
+        align-items: center;
+        background: white;
+        border-color: #d4dcea;
+        color: #41536f;
+        display: inline-flex;
+        justify-content: center;
+        min-height: 34px;
+        min-width: 34px;
+        padding: 0;
+      }
+
+      button.icon-button svg {
+        display: block;
+        height: 16px;
+        width: 16px;
+      }
+
+      button.icon-button[data-copied='true'] {
+        background: #10203c;
+        border-color: #10203c;
+        color: white;
       }
 
       .embed-preview {
@@ -168,11 +235,11 @@
             <div>
               <div class="embed-preview-title">Samples</div>
               <div class="sample-row">
-                <button class="sample-pill" data-sample="iver-pants" type="button">
-                  Iver Pants
+                <button class="sample-pill" data-sample="pants" type="button">
+                  Pants
                 </button>
-                <button class="sample-pill" data-sample="numeric-id" type="button">
-                  6792154579016
+                <button class="sample-pill" data-sample="shirt" type="button">
+                  Shirt
                 </button>
               </div>
             </div>
@@ -232,7 +299,7 @@
           <div class="button-row">
             <button id="render-widget" type="button">Render widget</button>
             <button id="simulate-missing" class="secondary" type="button">
-              Simulate 404 article
+              Simulate 404 product
             </button>
           </div>
 
@@ -242,12 +309,56 @@
           </p>
         </section>
 
-        <section class="widget-panel">
-          <h2>Embedded widget</h2>
-          <div id="size-recommender-demo" class="widget-preview"></div>
-          <p class="embed-preview-title">Embed code</p>
-          <pre class="embed-preview"><code id="embed-code"></code></pre>
-        </section>
+        <div class="preview-stack">
+          <section class="widget-panel">
+            <h2>Embedded widget</h2>
+            <div id="size-recommender-demo" class="widget-preview"></div>
+          </section>
+
+          <section class="widget-panel">
+            <div class="card-header">
+              <div>
+                <h2>Embed code</h2>
+                <p class="card-subtitle">
+                  Choose the embed style you want to copy.
+                </p>
+              </div>
+              <div class="code-card-actions">
+                <button
+                  id="copy-code"
+                  class="icon-button"
+                  type="button"
+                  aria-label="Copy embed code"
+                  title="Copy embed code"
+                >
+                  <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path d="M6.5 2A2.5 2.5 0 0 0 4 4.5v7A2.5 2.5 0 0 0 6.5 14H7V4.5A2.5 2.5 0 0 1 9.5 2H6.5Z" />
+                    <path d="M9.5 3A1.5 1.5 0 0 0 8 4.5v9A1.5 1.5 0 0 0 9.5 15h5A1.5 1.5 0 0 0 16 13.5v-9A1.5 1.5 0 0 0 14.5 3h-5Z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="mode-row">
+              <button
+                class="sample-pill mode-pill is-active"
+                data-embed-mode="html"
+                type="button"
+              >
+                HTML
+              </button>
+              <button
+                class="sample-pill mode-pill"
+                data-embed-mode="js"
+                type="button"
+              >
+                JS init
+              </button>
+            </div>
+
+            <pre class="embed-preview"><code id="embed-code"></code></pre>
+          </section>
+        </div>
       </div>
     </main>
 
