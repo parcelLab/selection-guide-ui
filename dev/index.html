@@ -50,6 +50,12 @@
         gap: 14px;
       }
 
+      .sample-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
       label {
         color: #41536f;
         display: grid;
@@ -82,6 +88,16 @@
         color: #10203c;
       }
 
+      button.sample-pill {
+        background: #f6f8fc;
+        border-color: #d4dcea;
+        color: #41536f;
+        font-size: 0.8rem;
+        font-weight: 600;
+        min-height: 34px;
+        padding: 0 12px;
+      }
+
       .button-row {
         display: flex;
         flex-wrap: wrap;
@@ -109,6 +125,33 @@
         margin: 0 0 14px;
       }
 
+      .widget-preview {
+        margin-bottom: 18px;
+      }
+
+      .embed-preview-title {
+        color: #41536f;
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        margin: 0 0 8px;
+        text-transform: uppercase;
+      }
+
+      .embed-preview {
+        background: #0f1728;
+        border-radius: 16px;
+        color: #eef3ff;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 0.78rem;
+        line-height: 1.55;
+        margin: 0;
+        overflow-x: auto;
+        padding: 14px;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
       @media (max-width: 900px) {
         .shell {
           grid-template-columns: 1fr;
@@ -122,11 +165,23 @@
         <section class="controls">
           <h2>Widget Controls</h2>
           <div class="field-grid">
+            <div>
+              <div class="embed-preview-title">Samples</div>
+              <div class="sample-row">
+                <button class="sample-pill" data-sample="iver-pants" type="button">
+                  Iver Pants
+                </button>
+                <button class="sample-pill" data-sample="numeric-id" type="button">
+                  6792154579016
+                </button>
+              </div>
+            </div>
+
             <label>
-              Article name
+              Product ID
               <input
-                id="article-name"
-                name="articleName"
+                id="product-id"
+                name="productId"
                 value="Men's Iver Pants (tailored fit)"
               />
             </label>
@@ -137,7 +192,7 @@
                 id="account-id"
                 name="accountId"
                 inputmode="numeric"
-                value="1619650"
+                value="1617954"
               />
             </label>
 
@@ -182,14 +237,16 @@
           </div>
 
           <p class="hint">
-            Default values match your sample API call. Edit the article and re-render
-            to test other products or the configurable 404 behavior.
+            Use the sample requests or enter a product ID and account ID to preview
+            the widget and copy the matching embed code.
           </p>
         </section>
 
         <section class="widget-panel">
           <h2>Embedded widget</h2>
-          <div id="size-recommender-demo"></div>
+          <div id="size-recommender-demo" class="widget-preview"></div>
+          <p class="embed-preview-title">Embed code</p>
+          <pre class="embed-preview"><code id="embed-code"></code></pre>
         </section>
       </div>
     </main>

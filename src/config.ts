@@ -51,6 +51,16 @@ function parseSurface(surface: WidgetConfig['surface']): SurfaceMode {
   return surface === 'plain' ? 'plain' : 'subtle';
 }
 
+function resolveProductId(config: Pick<WidgetConfig, 'productId' | 'articleName'>): string {
+  const productId = config.productId?.trim() ?? config.articleName?.trim();
+
+  if (!productId) {
+    throw new Error('productId is required.');
+  }
+
+  return productId;
+}
+
 export function resolveConfig(
   config: WidgetInitOptions,
 ): ResolvedWidgetConfig {
@@ -60,16 +70,12 @@ export function resolveConfig(
     ...baseMessages,
     ...config.messages,
   };
-  const articleName = config.articleName?.trim();
-
-  if (!articleName) {
-    throw new Error('articleName is required.');
-  }
+  const productId = resolveProductId(config);
 
   return {
     target: resolveTarget(config.target),
     accountId: parseAccountId(config.accountId),
-    articleName,
+    productId,
     locale,
     messages,
     notFoundMode: config.notFoundMode ?? 'empty',
@@ -101,11 +107,12 @@ export function readConfigFromElement(
 ): WidgetInitOptions | null {
   const { dataset } = element;
   const accountId = dataset.accountId;
-  const articleName = dataset.articleName;
+  const productId = dataset.productId ?? dataset.articleName;
 
-  if (!accountId || !articleName) {
+  if (!accountId || !productId) {
     console.warn(
-      'SizeRecommender: skipping element missing data-account-id or data-article-name.',
+      'SizeRecommender: skipping element missing data-account-id or data-product-id.',
+      'Legacy data-article-name is also accepted.',
       element,
     );
     return null;
@@ -114,7 +121,7 @@ export function readConfigFromElement(
   const config: WidgetInitOptions = {
     target: element,
     accountId,
-    articleName,
+    productId,
     notFoundMode:
       dataset.notFoundMode === 'true-to-size' ? 'true-to-size' : 'empty',
   };

@@ -30,8 +30,13 @@ npm run dev
 
 Open [http://localhost:4173](http://localhost:4173). The demo page uses your sample defaults:
 
-- `accountId`: `1619650`
-- `articleName`: `Men's Iver Pants (tailored fit)`
+- `accountId`: `1617954`
+- `productId`: `Men's Iver Pants (tailored fit)`
+
+It also includes quick sample buttons for:
+
+- `Men's Iver Pants (tailored fit)` / `1617954`
+- `6792154579016` / `1619013`
 
 The page loads the local IIFE bundle and initializes the widget via
 `window.SizeRecommender.init(...)`.
@@ -48,8 +53,8 @@ custom GitHub Actions workflow. After deployment, the project site URL is:
 ```html
 <div
   data-size-recommender
-  data-account-id="1619650"
-  data-article-name="Men's Iver Pants (tailored fit)"
+  data-account-id="1617954"
+  data-product-id="Men's Iver Pants (tailored fit)"
   data-not-found-mode="true-to-size"
   data-messages='{"title":"How It Fits"}'
 ></div>
@@ -64,8 +69,8 @@ The IIFE build auto-initializes any `[data-size-recommender]` element.
 ```js
 const widget = window.SizeRecommender.init({
   target: '#size-recommender',
-  accountId: 1619650,
-  articleName: "Men's Iver Pants (tailored fit)",
+  accountId: 1617954,
+  productId: "Men's Iver Pants (tailored fit)",
   appearance: 'neutral',
   density: 'compact',
   surface: 'subtle',
@@ -85,7 +90,7 @@ const widget = window.SizeRecommender.init({
 });
 
 widget.update({
-  articleName: "Women's New Product"
+  productId: "Women's New Product"
 });
 ```
 
@@ -95,7 +100,8 @@ widget.update({
 | --- | --- | --- |
 | `target` | `string \| HTMLElement` | Required for JS init |
 | `accountId` | `number \| string` | Required |
-| `articleName` | `string` | Required. Must match the API article name |
+| `productId` | `string` | Required. Passed to the API recommendation identifier path |
+| `articleName` | `string` | Legacy alias for `productId`, still accepted for backwards compatibility |
 | `locale` | `string` | Defaults to `en` |
 | `messages` | `Partial<WidgetMessages>` | Localization and copy overrides |
 | `notFoundMode` | `'empty' \| 'true-to-size'` | Controls 404 fallback behavior |

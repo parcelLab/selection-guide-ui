@@ -55,7 +55,8 @@ export interface WidgetMessages {
 export interface WidgetConfig {
   target: WidgetTarget;
   accountId: number | string;
-  articleName: string;
+  productId?: string;
+  articleName?: string;
   locale?: string;
   messages?: Partial<WidgetMessages>;
   notFoundMode?: NotFoundMode;
@@ -70,7 +71,7 @@ export interface WidgetConfig {
 export interface ResolvedWidgetConfig {
   target: HTMLElement;
   accountId: number;
-  articleName: string;
+  productId: string;
   locale: string;
   messages: WidgetMessages;
   notFoundMode: NotFoundMode;

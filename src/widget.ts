@@ -19,6 +19,29 @@ function loadingViewModel(config: ResolvedWidgetConfig): ViewModel {
   };
 }
 
+function canonicalizeInput<T extends WidgetInitOptions | WidgetUpdateOptions>(
+  input: T,
+): T {
+  const productId =
+    typeof input.productId === 'string'
+      ? input.productId
+      : typeof input.articleName === 'string'
+        ? input.articleName
+        : undefined;
+
+  if (productId == null) {
+    return input;
+  }
+
+  const normalized = {
+    ...input,
+    productId,
+  } as T & { articleName?: string };
+
+  delete normalized.articleName;
+  return normalized;
+}
+
 export class SizeRecommenderWidget implements WidgetInstance {
   private input: WidgetInitOptions;
 
@@ -31,8 +54,8 @@ export class SizeRecommenderWidget implements WidgetInstance {
   private requestId = 0;
 
   constructor(input: WidgetInitOptions) {
-    this.input = input;
-    this.config = resolveConfig(input);
+    this.input = canonicalizeInput(input);
+    this.config = resolveConfig(this.input);
     this.renderer = new WidgetRenderer(this.config.target);
     registry.set(this.config.target, this);
     this.config.target.dataset.sizeRecommenderActive = 'true';
@@ -71,7 +94,7 @@ export class SizeRecommenderWidget implements WidgetInstance {
   }
 
   async update(options: WidgetUpdateOptions): Promise<void> {
-    this.input = {
+    this.input = canonicalizeInput({
       ...this.input,
       ...options,
       target: this.config.target,
@@ -79,7 +102,7 @@ export class SizeRecommenderWidget implements WidgetInstance {
         ...this.input.messages,
         ...options.messages,
       },
-    };
+    });
     this.config = resolveConfig(this.input);
     await this.refresh();
   }
@@ -92,16 +115,17 @@ export class SizeRecommenderWidget implements WidgetInstance {
 }
 
 export function initWidget(config: WidgetInitOptions): WidgetInstance {
-  const resolved = resolveConfig(config);
+  const normalizedConfig = canonicalizeInput(config);
+  const resolved = resolveConfig(normalizedConfig);
   const existing = registry.get(resolved.target);
 
   if (existing) {
-    void existing.update(config);
+    void existing.update(normalizedConfig);
     return existing;
   }
 
   const widget = new SizeRecommenderWidget({
-    ...config,
+    ...normalizedConfig,
     target: resolved.target,
   });
   void widget.refresh();

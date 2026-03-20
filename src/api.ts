@@ -7,7 +7,7 @@ import {
 const responseCache = new Map<string, RecommendationApiResponse>();
 
 function cacheKey(config: ResolvedWidgetConfig): string {
-  return `${config.apiBaseUrl}|${config.accountId}|${config.articleName}`;
+  return `${config.apiBaseUrl}|${config.accountId}|${config.productId}`;
 }
 
 export async function fetchRecommendation(
@@ -21,9 +21,9 @@ export async function fetchRecommendation(
     return cached;
   }
 
-  const articleName = encodeURIComponent(config.articleName);
+  const productId = encodeURIComponent(config.productId);
   const url = new URL(
-    `/v4/size-recommender/recommendation/${articleName}/`,
+    `/v4/size-recommender/recommendation/${productId}/`,
     config.apiBaseUrl,
   );
 

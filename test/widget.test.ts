@@ -43,7 +43,7 @@ describe('SizeRecommender widget', () => {
     init({
       target: '#mount',
       accountId: 1619650,
-      articleName: "Men's Iver Pants (tailored fit)",
+      productId: "Men's Iver Pants (tailored fit)",
     });
 
     const host = document.querySelector<HTMLElement>('#mount');
@@ -86,7 +86,7 @@ describe('SizeRecommender widget', () => {
     init({
       target: '#mount',
       accountId: 1619650,
-      articleName: 'Unknown article',
+      productId: 'Unknown article',
       notFoundMode: 'empty',
     });
 
@@ -105,7 +105,7 @@ describe('SizeRecommender widget', () => {
     init({
       target: '#mount',
       accountId: 1619650,
-      articleName: 'Unknown article',
+      productId: 'Unknown article',
       notFoundMode: 'true-to-size',
     });
 
@@ -138,7 +138,7 @@ describe('SizeRecommender widget', () => {
         id="auto"
         data-size-recommender
         data-account-id="1619650"
-        data-article-name="Auto-init article"
+        data-product-id="Auto-init article"
         data-messages='{"title":"Sizing guidance"}'
       ></div>
     `;
@@ -150,6 +150,26 @@ describe('SizeRecommender widget', () => {
     await vi.waitFor(() => {
       expect(host?.textContent).toContain('Sizing guidance');
       expect(host?.textContent).toContain('Should fit as expected');
+    });
+  });
+
+  it('accepts legacy articleName config aliases', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(jsonResponse(recommendationResponse())),
+    );
+
+    document.body.innerHTML = '<div id="mount"></div>';
+    init({
+      target: '#mount',
+      accountId: 1619650,
+      articleName: "Men's Iver Pants (tailored fit)",
+    });
+
+    const host = document.querySelector<HTMLElement>('#mount');
+
+    await vi.waitFor(() => {
+      expect(host?.textContent).toContain('Consider sizing up');
     });
   });
 
@@ -181,10 +201,10 @@ describe('SizeRecommender widget', () => {
     const widget = init({
       target: '#mount',
       accountId: 1619650,
-      articleName: 'First article',
+      productId: 'First article',
     });
 
-    await widget.update({ articleName: 'Second article' });
+    await widget.update({ productId: 'Second article' });
     resolveFirst?.(
       jsonResponse(
         recommendationResponse({
@@ -219,7 +239,7 @@ describe('SizeRecommender widget', () => {
     init({
       target: '#mount',
       accountId: 1619650,
-      articleName: 'Styled article',
+      productId: 'Styled article',
       appearance: 'colored',
       density: 'comfortable',
       surface: 'plain',
