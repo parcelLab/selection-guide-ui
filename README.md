@@ -1,8 +1,18 @@
 # Selection Guide UI
 
-Embeddable size recommendation widget for retailer product detail pages (PDPs). Renders fit guidance — category, bar position, confidence score, and an AI-generated customer feedback summary — powered by the [parcelLab Size Recommender API](https://product-api.parcellab.com/v4/docs/#tag/Size-Recommender).
+Open-source reference implementation of an embeddable size recommendation widget for retailer product detail pages (PDPs). Renders fit guidance — category, bar position, confidence score, and an AI-generated customer feedback summary — powered by the [parcelLab Size Recommender API](https://product-api.parcellab.com/v4/docs/#tag/Size-Recommender).
+
+Use this widget as-is, or as a starting point for building your own custom integration against the API.
 
 **[Live demo](https://parcellab.github.io/selection-guide-ui/)**
+
+| Runs small | True to size | True to size (colored) |
+| :---: | :---: | :---: |
+| ![Runs small](screenshots/widget-runs-small.png) | ![True to size](screenshots/widget-true-to-size-neutral.png) | ![True to size colored](screenshots/widget-true-to-size-colored.png) |
+
+| Fallback: true-to-size | Fallback: empty |
+| :---: | :---: |
+| ![Fallback true-to-size](screenshots/widget-fallback-true-to-size.png) | ![Empty state](screenshots/widget-empty-state.png) |
 
 ## Overview
 
@@ -132,8 +142,10 @@ When using the IIFE auto-init, configure via `data-*` attributes:
 
 When a product has no recommendation data, the widget supports two modes:
 
-- **`empty`** (default) — shows a "no data available" message
-- **`true-to-size`** — renders a "likely true to size" fallback without confidence or summary
+| `empty` (default) | `true-to-size` |
+| :---: | :---: |
+| ![Empty](screenshots/widget-empty-state.png) | ![True-to-size fallback](screenshots/widget-fallback-true-to-size.png) |
+| Shows a "no data available" message | Renders a "likely true to size" fallback without confidence or summary |
 
 ## Styling
 
@@ -229,6 +241,16 @@ npm run build:pages
 Builds a static demo site to `site/`. The repository is configured to deploy this automatically via GitHub Actions on push to `main`.
 
 **Demo URL:** [https://parcellab.github.io/selection-guide-ui/](https://parcellab.github.io/selection-guide-ui/)
+
+## Building Your Own
+
+This widget is an open-source reference implementation. If you need a custom integration, you can:
+
+1. **Use the API directly** — call the [Size Recommender API](https://product-api.parcellab.com/v4/docs/#tag/Size-Recommender) from your own frontend code and render the response however you like.
+2. **Fork this repo** — start from this codebase and customize the rendering, styling, and behavior to match your exact requirements.
+3. **Use as a library** — import the ESM build and override messages, theme, and CSS to fit your design system.
+
+The source code in `src/` is organized into clear modules (API client, config resolution, model transformation, rendering) that you can reference or reuse.
 
 ## Related
 
