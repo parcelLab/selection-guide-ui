@@ -89,10 +89,20 @@ function jsEmbedSnippet(config) {
 }
 
 function updateEmbedModeButtons() {
+  const activeClasses = ['bg-navy-800', 'border-navy-800', 'text-white'];
+  const inactiveClasses = ['bg-white', 'border-navy-200', 'text-navy-500', 'hover:bg-navy-50'];
+
   embedModeButtons.forEach((button) => {
     const isActive = button.dataset.embedMode === embedMode;
-    button.classList.toggle('is-active', isActive);
     button.setAttribute('aria-pressed', String(isActive));
+
+    if (isActive) {
+      button.classList.remove(...inactiveClasses);
+      button.classList.add(...activeClasses);
+    } else {
+      button.classList.remove(...activeClasses);
+      button.classList.add(...inactiveClasses);
+    }
   });
 }
 

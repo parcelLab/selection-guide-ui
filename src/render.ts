@@ -49,6 +49,8 @@ const STYLES = `
     font: inherit;
     gap: var(--plsr-gap);
     line-height: 1.4;
+    min-width: 0;
+    overflow: hidden;
     width: 100%;
   }
 
@@ -262,7 +264,6 @@ const STYLES = `
   .${ROOT_CLASS}__recommendation-meta {
     color: var(--plsr-muted-text);
     font-size: var(--plsr-summary-size);
-    white-space: nowrap;
   }
 
   .${ROOT_CLASS}__recommendation-summary {
@@ -271,6 +272,7 @@ const STYLES = `
     font-size: var(--plsr-summary-size);
     line-height: 1.5;
     margin: 0;
+    overflow-wrap: anywhere;
   }
 
   @media (max-width: 520px) {
