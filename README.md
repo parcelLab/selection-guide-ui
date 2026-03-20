@@ -6,13 +6,14 @@ Use this widget as-is, or as a starting point for building your own custom integ
 
 **[Live demo](https://parcellab.github.io/selection-guide-ui/)**
 
-| Runs small | True to size | True to size (colored) |
-| :---: | :---: | :---: |
-| ![Runs small](screenshots/widget-runs-small.png) | ![True to size](screenshots/widget-true-to-size-neutral.png) | ![True to size colored](screenshots/widget-true-to-size-colored.png) |
-
-| Fallback: true-to-size | Fallback: empty |
+| Neutral | Colored |
 | :---: | :---: |
-| ![Fallback true-to-size](screenshots/widget-fallback-true-to-size.png) | ![Empty state](screenshots/widget-empty-state.png) |
+| ![Empty state](screenshots/widget-empty-state.png) | ![Fallback true-to-size](screenshots/widget-fallback-true-to-size.png) |
+| `notFoundMode: 'empty'` | `notFoundMode: 'true-to-size'` |
+| ![Runs small](screenshots/widget-runs-small.png) | ![Runs small colored](screenshots/widget-runs-small-colored.png) |
+| `appearance: 'neutral'` · long summary | `appearance: 'colored'` · long summary |
+| ![True to size](screenshots/widget-true-to-size-neutral.png) | ![True to size colored](screenshots/widget-true-to-size-colored.png) |
+| `appearance: 'neutral'` · short summary | `appearance: 'colored'` · short summary |
 
 ## Overview
 
@@ -142,10 +143,8 @@ When using the IIFE auto-init, configure via `data-*` attributes:
 
 When a product has no recommendation data, the widget supports two modes:
 
-| `empty` (default) | `true-to-size` |
-| :---: | :---: |
-| ![Empty](screenshots/widget-empty-state.png) | ![True-to-size fallback](screenshots/widget-fallback-true-to-size.png) |
-| Shows a "no data available" message | Renders a "likely true to size" fallback without confidence or summary |
+- **`empty`** (default) — shows a "no data available" message
+- **`true-to-size`** — renders a "likely true to size" fallback without confidence or summary
 
 ## Styling
 
