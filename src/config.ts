@@ -40,7 +40,11 @@ function parseAccountId(accountId: WidgetConfig['accountId']): number {
 function parseAppearance(
   appearance: WidgetConfig['appearance'],
 ): AppearanceMode {
-  return appearance === 'colored' ? 'colored' : 'neutral';
+  if (appearance === 'colored' || appearance === 'alert') {
+    return appearance;
+  }
+
+  return 'neutral';
 }
 
 function parseDensity(density: WidgetConfig['density']): DensityMode {
@@ -134,7 +138,7 @@ export function readConfigFromElement(
     config.apiBaseUrl = dataset.apiBaseUrl;
   }
 
-  if (dataset.appearance === 'colored' || dataset.appearance === 'neutral') {
+  if (dataset.appearance === 'colored' || dataset.appearance === 'neutral' || dataset.appearance === 'alert') {
     config.appearance = dataset.appearance;
   }
 
