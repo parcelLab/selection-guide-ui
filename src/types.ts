@@ -4,7 +4,7 @@ export type NotFoundMode = 'empty' | 'true-to-size';
 
 export type FitCategory = 'small' | 'true' | 'large' | 'unknown';
 
-export type AppearanceMode = 'neutral' | 'colored';
+export type AppearanceMode = 'neutral' | 'colored' | 'alert';
 
 export type DensityMode = 'compact' | 'comfortable';
 

@@ -7,6 +7,14 @@ const SAMPLE_REQUESTS = {
     productId: '6792154579016',
     accountId: '1619013',
   },
+  'pants-large': {
+    productId: "Men's Pro 3L 3.0 Pants",
+    accountId: '1617954',
+  },
+  'pants-small': {
+    productId: "Men's Iver 5-Pocket Pants",
+    accountId: '1617954',
+  },
 };
 
 const DEFAULT_SAMPLE = SAMPLE_REQUESTS.pants;
