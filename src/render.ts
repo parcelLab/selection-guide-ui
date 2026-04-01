@@ -3,6 +3,7 @@ import type {
   ErrorViewModel,
   FallbackTrueViewModel,
   FitCategory,
+  HiddenViewModel,
   LoadingViewModel,
   ReadyViewModel,
   ResolvedWidgetConfig,
@@ -440,7 +441,7 @@ function appendHeader(
   const title = createElement('h2', `${ROOT_CLASS}__title`, config.messages.title);
   header.appendChild(title);
 
-  if (pillText) {
+  if (pillText && config.showPill) {
     header.appendChild(
       createElement('div', `${ROOT_CLASS}__pill`, pillText),
     );
@@ -517,6 +518,7 @@ function appendRecommendation(
   summary: string,
   fitCategory?: FitCategory,
   confidenceText?: string,
+  showSummary = true,
 ): void {
   const recommendation = createElement('section', `${ROOT_CLASS}__recommendation`);
   const header = createElement('div', `${ROOT_CLASS}__recommendation-header`);
@@ -543,9 +545,13 @@ function appendRecommendation(
   }
 
   recommendation.appendChild(header);
-  recommendation.appendChild(
-    createElement('p', `${ROOT_CLASS}__recommendation-summary`, summary),
-  );
+
+  if (showSummary) {
+    recommendation.appendChild(
+      createElement('p', `${ROOT_CLASS}__recommendation-summary`, summary),
+    );
+  }
+
   container.appendChild(recommendation);
 }
 
@@ -570,14 +576,21 @@ function renderReadyLike(
   viewModel: ReadyViewModel | FallbackTrueViewModel,
 ): void {
   appendHeader(mount, config, viewModel.pillText);
-  appendScale(mount, config, viewModel.position);
-  appendRecommendation(
-    mount,
-    viewModel.recommendationHeading,
-    viewModel.summary,
-    viewModel.fitCategory,
-    'confidenceText' in viewModel ? viewModel.confidenceText : undefined,
-  );
+
+  if (config.showScale) {
+    appendScale(mount, config, viewModel.position);
+  }
+
+  if (config.showRecommendation) {
+    appendRecommendation(
+      mount,
+      viewModel.recommendationHeading,
+      viewModel.summary,
+      viewModel.fitCategory,
+      'confidenceText' in viewModel ? viewModel.confidenceText : undefined,
+      config.showSummary,
+    );
+  }
 }
 
 function renderMessageOnly(
@@ -586,7 +599,17 @@ function renderMessageOnly(
   viewModel: EmptyViewModel | ErrorViewModel,
 ): void {
   appendHeader(mount, config, viewModel.pillText);
-  appendRecommendation(mount, viewModel.recommendationHeading, viewModel.summary);
+
+  if (config.showRecommendation) {
+    appendRecommendation(
+      mount,
+      viewModel.recommendationHeading,
+      viewModel.summary,
+      undefined,
+      undefined,
+      config.showSummary,
+    );
+  }
 }
 
 export class WidgetRenderer {
@@ -612,6 +635,14 @@ export class WidgetRenderer {
   }
 
   render(config: ResolvedWidgetConfig, viewModel: ViewModel): void {
+    if (viewModel.state === 'hidden') {
+      this.mount.className = rootClassName(config, viewModel);
+      this.mount.replaceChildren();
+      this.mount.style.display = 'none';
+      return;
+    }
+
+    this.mount.style.display = '';
     this.mount.className = rootClassName(config, viewModel);
     applyTheme(this.mount, config.theme);
     this.mount.replaceChildren();

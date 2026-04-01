@@ -65,8 +65,8 @@ describe('SizeRecommender widget', () => {
       '.pl-size-recommender__marker',
     );
 
-    expect(root?.classList.contains('pl-size-recommender--neutral')).toBe(true);
-    expect(root?.classList.contains('pl-size-recommender--density-compact')).toBe(
+    expect(root?.classList.contains('pl-size-recommender--colored')).toBe(true);
+    expect(root?.classList.contains('pl-size-recommender--density-comfortable')).toBe(
       true,
     );
     expect(marker?.style.left).toBe('20%');
@@ -266,6 +266,139 @@ describe('SizeRecommender widget', () => {
       expect(root?.classList.contains('merchant-fit-box')).toBe(true);
       expect(root?.style.getPropertyValue('--plsr-background')).toBe('#fafafa');
       expect(root?.style.getPropertyValue('--plsr-radius')).toBe('18px');
+    });
+  });
+
+  it('hides widget completely on 404 when notFoundMode is hidden', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse({}, 404)));
+
+    document.body.innerHTML = '<div id="mount"></div>';
+    init({
+      target: '#mount',
+      accountId: 1619650,
+      productId: 'Unknown article',
+      notFoundMode: 'hidden',
+    });
+
+    const host = document.querySelector<HTMLElement>('#mount');
+
+    await vi.waitFor(() => {
+      const root = host?.querySelector<HTMLElement>('.pl-size-recommender');
+      expect(root?.style.display).toBe('none');
+      expect(root?.textContent).toBe('');
+    });
+  });
+
+  it('un-hides widget when updated from hidden to valid data', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(jsonResponse({}, 404))
+      .mockResolvedValueOnce(jsonResponse(recommendationResponse()));
+
+    vi.stubGlobal('fetch', fetchMock);
+
+    document.body.innerHTML = '<div id="mount"></div>';
+    const widget = init({
+      target: '#mount',
+      accountId: 1619650,
+      productId: 'Unknown article',
+      notFoundMode: 'hidden',
+    });
+
+    const host = document.querySelector<HTMLElement>('#mount');
+
+    await vi.waitFor(() => {
+      const root = host?.querySelector<HTMLElement>('.pl-size-recommender');
+      expect(root?.style.display).toBe('none');
+    });
+
+    await widget.update({ productId: "Men's Iver Pants (tailored fit)" });
+
+    await vi.waitFor(() => {
+      const root = host?.querySelector<HTMLElement>('.pl-size-recommender');
+      expect(root?.style.display).toBe('');
+      expect(host?.textContent).toContain('How It Fits');
+    });
+  });
+
+  it('hides pill, scale, and summary when visibility toggles are false', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(jsonResponse(recommendationResponse())),
+    );
+
+    document.body.innerHTML = '<div id="mount"></div>';
+    init({
+      target: '#mount',
+      accountId: 1619650,
+      productId: "Men's Iver Pants (tailored fit)",
+      showPill: false,
+      showScale: false,
+      showSummary: false,
+    });
+
+    const host = document.querySelector<HTMLElement>('#mount');
+
+    await vi.waitFor(() => {
+      expect(host?.querySelector('.pl-size-recommender__pill')).toBeNull();
+      expect(host?.querySelector('.pl-size-recommender__scale')).toBeNull();
+      expect(
+        host?.querySelector('.pl-size-recommender__recommendation-summary'),
+      ).toBeNull();
+      expect(host?.querySelector('.pl-size-recommender__recommendation')).not.toBeNull();
+      expect(host?.textContent).toContain('Consider sizing up');
+    });
+  });
+
+  it('hides entire recommendation box when showRecommendation is false', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(jsonResponse(recommendationResponse())),
+    );
+
+    document.body.innerHTML = '<div id="mount"></div>';
+    init({
+      target: '#mount',
+      accountId: 1619650,
+      productId: "Men's Iver Pants (tailored fit)",
+      showRecommendation: false,
+    });
+
+    const host = document.querySelector<HTMLElement>('#mount');
+
+    await vi.waitFor(() => {
+      expect(host?.querySelector('.pl-size-recommender__recommendation')).toBeNull();
+      expect(host?.querySelector('.pl-size-recommender__scale')).not.toBeNull();
+    });
+  });
+
+  it('loads German locale messages', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        jsonResponse(
+          recommendationResponse({
+            size_fit_category: 'True to size',
+            smoothed_fit_position: 0,
+          }),
+        ),
+      ),
+    );
+
+    document.body.innerHTML = '<div id="mount"></div>';
+    init({
+      target: '#mount',
+      accountId: 1619650,
+      productId: 'Test product',
+      locale: 'de',
+    });
+
+    const host = document.querySelector<HTMLElement>('#mount');
+
+    await vi.waitFor(() => {
+      expect(host?.textContent).toContain('Passform');
+      expect(host?.textContent).toContain('Sollte wie erwartet passen');
+      expect(host?.textContent).toContain('Fällt klein aus');
     });
   });
 });

@@ -144,6 +144,10 @@ export function handleFetchError(
   config: ResolvedWidgetConfig,
 ): ViewModel {
   if (error instanceof FetchError && error.code === 'not-found') {
+    if (config.notFoundMode === 'hidden') {
+      return { state: 'hidden' };
+    }
+
     if (config.notFoundMode === 'true-to-size') {
       return {
         state: 'fallback-true',

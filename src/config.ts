@@ -40,19 +40,19 @@ function parseAccountId(accountId: WidgetConfig['accountId']): number {
 function parseAppearance(
   appearance: WidgetConfig['appearance'],
 ): AppearanceMode {
-  if (appearance === 'colored' || appearance === 'alert') {
+  if (appearance === 'neutral' || appearance === 'alert') {
     return appearance;
   }
 
-  return 'neutral';
+  return 'colored';
 }
 
 function parseDensity(density: WidgetConfig['density']): DensityMode {
-  return density === 'comfortable' ? 'comfortable' : 'compact';
+  return density === 'compact' ? 'compact' : 'comfortable';
 }
 
 function parseSurface(surface: WidgetConfig['surface']): SurfaceMode {
-  return surface === 'plain' ? 'plain' : 'subtle';
+  return surface === 'subtle' ? 'subtle' : 'plain';
 }
 
 function resolveProductId(config: Pick<WidgetConfig, 'productId' | 'articleName'>): string {
@@ -82,13 +82,21 @@ export function resolveConfig(
     productId,
     locale,
     messages,
-    notFoundMode: config.notFoundMode ?? 'empty',
+    notFoundMode: config.notFoundMode === 'empty'
+      ? 'empty'
+      : config.notFoundMode === 'hidden'
+        ? 'hidden'
+        : 'true-to-size',
     apiBaseUrl: (config.apiBaseUrl ?? DEFAULT_API_BASE_URL).replace(/\/$/, ''),
     appearance: parseAppearance(config.appearance),
     density: parseDensity(config.density),
     surface: parseSurface(config.surface),
     theme: config.theme ?? {},
     className: config.className?.trim() ?? '',
+    showPill: config.showPill !== false,
+    showScale: config.showScale !== false,
+    showRecommendation: config.showRecommendation !== false,
+    showSummary: config.showSummary !== false,
   };
 }
 
@@ -126,9 +134,15 @@ export function readConfigFromElement(
     target: element,
     accountId,
     productId,
-    notFoundMode:
-      dataset.notFoundMode === 'true-to-size' ? 'true-to-size' : 'empty',
   };
+
+  const notFoundMode = dataset.notFoundMode;
+  config.notFoundMode =
+    notFoundMode === 'empty'
+      ? 'empty'
+      : notFoundMode === 'hidden'
+        ? 'hidden'
+        : 'true-to-size';
 
   if (dataset.locale) {
     config.locale = dataset.locale;
@@ -152,6 +166,22 @@ export function readConfigFromElement(
 
   if (dataset.className) {
     config.className = dataset.className;
+  }
+
+  if (dataset.showPill === 'false') {
+    config.showPill = false;
+  }
+
+  if (dataset.showScale === 'false') {
+    config.showScale = false;
+  }
+
+  if (dataset.showRecommendation === 'false') {
+    config.showRecommendation = false;
+  }
+
+  if (dataset.showSummary === 'false') {
+    config.showSummary = false;
   }
 
   const messages = parseJsonObject<WidgetMessages>(dataset.messages);
