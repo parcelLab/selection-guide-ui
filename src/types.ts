@@ -1,6 +1,6 @@
 export type WidgetTarget = string | HTMLElement;
 
-export type NotFoundMode = 'empty' | 'true-to-size';
+export type NotFoundMode = 'empty' | 'true-to-size' | 'hidden';
 
 export type FitCategory = 'small' | 'true' | 'large' | 'unknown';
 
@@ -66,6 +66,10 @@ export interface WidgetConfig {
   surface?: SurfaceMode;
   theme?: Partial<WidgetTheme>;
   className?: string;
+  showPill?: boolean;
+  showScale?: boolean;
+  showRecommendation?: boolean;
+  showSummary?: boolean;
 }
 
 export interface ResolvedWidgetConfig {
@@ -81,6 +85,10 @@ export interface ResolvedWidgetConfig {
   surface: SurfaceMode;
   theme: Partial<WidgetTheme>;
   className: string;
+  showPill: boolean;
+  showScale: boolean;
+  showRecommendation: boolean;
+  showSummary: boolean;
 }
 
 export interface WidgetInitOptions extends WidgetConfig {
@@ -157,9 +165,14 @@ export interface LoadingViewModel {
   text: string;
 }
 
+export interface HiddenViewModel {
+  state: 'hidden';
+}
+
 export type ViewModel =
   | LoadingViewModel
   | ReadyViewModel
   | FallbackTrueViewModel
   | EmptyViewModel
-  | ErrorViewModel;
+  | ErrorViewModel
+  | HiddenViewModel;
