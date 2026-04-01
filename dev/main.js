@@ -27,6 +27,11 @@ const notFoundModeSelect = document.querySelector('#not-found-mode');
 const appearanceSelect = document.querySelector('#appearance');
 const densitySelect = document.querySelector('#density');
 const surfaceSelect = document.querySelector('#surface');
+const localeSelect = document.querySelector('#locale');
+const showPillCheckbox = document.querySelector('#show-pill');
+const showScaleCheckbox = document.querySelector('#show-scale');
+const showRecommendationCheckbox = document.querySelector('#show-recommendation');
+const showSummaryCheckbox = document.querySelector('#show-summary');
 const renderButton = document.querySelector('#render-widget');
 const simulateMissingButton = document.querySelector('#simulate-missing');
 const sampleButtons = document.querySelectorAll('[data-sample]');
@@ -48,6 +53,11 @@ function currentConfig() {
     appearance: appearanceSelect.value,
     density: densitySelect.value,
     surface: surfaceSelect.value,
+    locale: localeSelect.value,
+    showPill: showPillCheckbox.checked,
+    showScale: showScaleCheckbox.checked,
+    showRecommendation: showRecommendationCheckbox.checked,
+    showSummary: showSummaryCheckbox.checked,
   };
 }
 
@@ -68,32 +78,53 @@ function scriptAttributes() {
 }
 
 function htmlEmbedSnippet(config) {
-  return `<div
-  data-size-recommender
-  data-account-id="${escapeAttribute(config.accountId)}"
-  data-product-id="${escapeAttribute(config.productId)}"
-  data-not-found-mode="${escapeAttribute(config.notFoundMode)}"
-  data-appearance="${escapeAttribute(config.appearance)}"
-  data-density="${escapeAttribute(config.density)}"
-  data-surface="${escapeAttribute(config.surface)}"
-></div>
-<script ${scriptAttributes()}></script>`;
+  const attrs = [
+    `data-size-recommender`,
+    `data-account-id="${escapeAttribute(config.accountId)}"`,
+    `data-product-id="${escapeAttribute(config.productId)}"`,
+    `data-not-found-mode="${escapeAttribute(config.notFoundMode)}"`,
+    `data-appearance="${escapeAttribute(config.appearance)}"`,
+    `data-density="${escapeAttribute(config.density)}"`,
+    `data-surface="${escapeAttribute(config.surface)}"`,
+  ];
+
+  if (config.locale && config.locale !== 'en') {
+    attrs.push(`data-locale="${escapeAttribute(config.locale)}"`);
+  }
+  if (!config.showPill) attrs.push(`data-show-pill="false"`);
+  if (!config.showScale) attrs.push(`data-show-scale="false"`);
+  if (!config.showRecommendation) attrs.push(`data-show-recommendation="false"`);
+  if (!config.showSummary) attrs.push(`data-show-summary="false"`);
+
+  return `<div\n  ${attrs.join('\n  ')}\n></div>\n<script ${scriptAttributes()}><\/script>`;
 }
 
 function jsEmbedSnippet(config) {
+  const options = [
+    `    target: '#size-recommender'`,
+    `    accountId: ${JSON.stringify(config.accountId)}`,
+    `    productId: ${JSON.stringify(config.productId)}`,
+    `    notFoundMode: ${JSON.stringify(config.notFoundMode)}`,
+    `    appearance: ${JSON.stringify(config.appearance)}`,
+    `    density: ${JSON.stringify(config.density)}`,
+    `    surface: ${JSON.stringify(config.surface)}`,
+  ];
+
+  if (config.locale && config.locale !== 'en') {
+    options.push(`    locale: ${JSON.stringify(config.locale)}`);
+  }
+  if (!config.showPill) options.push(`    showPill: false`);
+  if (!config.showScale) options.push(`    showScale: false`);
+  if (!config.showRecommendation) options.push(`    showRecommendation: false`);
+  if (!config.showSummary) options.push(`    showSummary: false`);
+
   return `<div id="size-recommender"></div>
-<script src="${embedBundleUrl()}"></script>
+<script src="${embedBundleUrl()}"><\/script>
 <script>
   window.SizeRecommender.init({
-    target: '#size-recommender',
-    accountId: ${JSON.stringify(config.accountId)},
-    productId: ${JSON.stringify(config.productId)},
-    notFoundMode: ${JSON.stringify(config.notFoundMode)},
-    appearance: ${JSON.stringify(config.appearance)},
-    density: ${JSON.stringify(config.density)},
-    surface: ${JSON.stringify(config.surface)}
+${options.join(',\n')}
   });
-</script>`;
+<\/script>`;
 }
 
 function updateEmbedModeButtons() {
@@ -179,6 +210,11 @@ async function renderWidget(overrides = {}) {
   appearanceSelect.value = config.appearance;
   densitySelect.value = config.density;
   surfaceSelect.value = config.surface;
+  localeSelect.value = config.locale || 'en';
+  showPillCheckbox.checked = config.showPill !== false;
+  showScaleCheckbox.checked = config.showScale !== false;
+  showRecommendationCheckbox.checked = config.showRecommendation !== false;
+  showSummaryCheckbox.checked = config.showSummary !== false;
   updateEmbedCodePreview(config);
 
   if (!widget) {
@@ -223,7 +259,7 @@ copyCodeButton?.addEventListener('click', () => {
   void copyEmbedCode();
 });
 
-[productIdInput, accountIdInput, notFoundModeSelect, appearanceSelect, densitySelect, surfaceSelect]
+[productIdInput, accountIdInput, notFoundModeSelect, appearanceSelect, densitySelect, surfaceSelect, localeSelect, showPillCheckbox, showScaleCheckbox, showRecommendationCheckbox, showSummaryCheckbox]
   .filter(Boolean)
   .forEach((element) => {
     element.addEventListener('input', () => {
