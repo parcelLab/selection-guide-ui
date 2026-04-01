@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "build": "rm -rf dist && node scripts/build.mjs && tsc -p tsconfig.types.json",
-    "build:pages": "node scripts/build-pages.mjs",
+    "build:site": "node scripts/build-site.mjs",
     "dev": "node scripts/dev.mjs",
     "test": "vitest run --environment jsdom"
   },
