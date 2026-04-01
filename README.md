@@ -4,7 +4,7 @@ Open-source reference implementation of an embeddable size recommendation widget
 
 Use this widget as-is, or as a starting point for building your own custom integration against the API.
 
-**[Live demo](https://parcellab.github.io/selection-guide-ui/)**
+**[Live demo](https://cdn.parcellab.com/playground/selection-guide-ui/)**
 
 **Sample with short info text**
 
@@ -55,7 +55,7 @@ It ships as a zero-dependency bundle in two formats:
   data-not-found-mode="true-to-size"
 ></div>
 
-<script src="https://parcellab.github.io/selection-guide-ui/dist/size-recommender.iife.js" defer></script>
+<script src="https://cdn.parcellab.com/js/selection-guide-ui/v1/size-recommender.iife.js" defer></script>
 ```
 
 The IIFE build auto-initializes every `[data-size-recommender]` element on the page.
@@ -67,10 +67,15 @@ const widget = window.SizeRecommender.init({
   target: '#size-recommender',
   accountId: 1617954,
   productId: "Men's Iver Pants (tailored fit)",
+  locale: 'de',
   appearance: 'neutral',
   density: 'compact',
   surface: 'subtle',
   notFoundMode: 'true-to-size',
+  showPill: true,
+  showScale: true,
+  showRecommendation: true,
+  showSummary: true,
   className: 'merchant-fit-widget',
   theme: {
     backgroundColor: '#f6f6f6',
@@ -121,13 +126,17 @@ Full API documentation: [Size Recommender API Reference](https://product-api.par
 | `accountId` | `number \| string` | — | **Required**. parcelLab account identifier. |
 | `productId` | `string` | — | **Required**. Product identifier passed to the API. |
 | `articleName` | `string` | — | Legacy alias for `productId`. Still accepted for backwards compatibility. |
-| `locale` | `string` | `'en'` | Locale for default messages. |
+| `locale` | `string` | `'en'` | Language for default messages. Supported: `en`, `de`, `fr`, `it`, `es`. |
 | `messages` | `Partial<WidgetMessages>` | — | Override any default message string. |
-| `notFoundMode` | `'empty' \| 'true-to-size'` | `'empty'` | Behavior when the API returns 404 (see below). |
+| `notFoundMode` | `'empty' \| 'true-to-size' \| 'hidden'` | `'empty'` | Behavior when the API returns 404. `hidden` hides the widget entirely. |
 | `apiBaseUrl` | `string` | `'https://product-api.parcellab.com'` | Override the API base URL. |
 | `appearance` | `'neutral' \| 'colored'` | `'neutral'` | `neutral` is grayscale; `colored` uses gradient track. |
 | `density` | `'compact' \| 'comfortable'` | `'compact'` | `compact` suits PDP sidebars; `comfortable` adds more spacing. |
 | `surface` | `'subtle' \| 'plain'` | `'subtle'` | `subtle` renders a light card; `plain` renders inline. |
+| `showPill` | `boolean` | `true` | Show or hide the fit category pill badge. |
+| `showScale` | `boolean` | `true` | Show or hide the fit position scale bar. |
+| `showRecommendation` | `boolean` | `true` | Show or hide the entire recommendation box. |
+| `showSummary` | `boolean` | `true` | Show or hide the LLM summary within the recommendation. |
 | `className` | `string` | — | Extra CSS classes added to the root element. |
 | `theme` | `Partial<WidgetTheme>` | — | CSS token overrides (colors, radius, etc.). |
 
@@ -144,7 +153,11 @@ When using the IIFE auto-init, configure via `data-*` attributes:
   data-appearance="colored"
   data-density="comfortable"
   data-surface="plain"
-  data-locale="en"
+  data-locale="de"
+  data-show-pill="true"
+  data-show-scale="true"
+  data-show-recommendation="true"
+  data-show-summary="false"
   data-messages='{"title":"How It Fits"}'
   data-theme='{"backgroundColor":"#f6f6f6","radius":"12px"}'
   data-class-name="my-custom-class"
@@ -153,10 +166,11 @@ When using the IIFE auto-init, configure via `data-*` attributes:
 
 ## 404 Handling
 
-When a product has no recommendation data, the widget supports two modes:
+When a product has no recommendation data, the widget supports three modes:
 
 - **`empty`** (default) — shows a "no data available" message
 - **`true-to-size`** — renders a "likely true to size" fallback without confidence or summary
+- **`hidden`** — hides the widget entirely (`display: none`); the widget reappears when valid data is provided via `update()` or `refresh()`
 
 ## Styling
 
@@ -169,7 +183,7 @@ The widget renders in **light DOM** (not Shadow DOM), so host-page typography in
 .pl-size-recommender--{neutral|colored}
 .pl-size-recommender--density-{compact|comfortable}
 .pl-size-recommender--surface-{subtle|plain}
-.pl-size-recommender--state-{loading|ready|fallback-true|empty|error}
+.pl-size-recommender--state-{loading|ready|fallback-true|empty|error|hidden}
 .pl-size-recommender--fit-{small|true|large|unknown}
 ```
 
@@ -266,15 +280,19 @@ npm test
 
 Runs the Vitest test suite with jsdom.
 
-### GitHub Pages
+### Deployment
+
+The project deploys to S3/CloudFront via GitHub Actions:
+
+- **Staging:** automatically deployed on push to `main` to `s3://parcellab-cdn/playground/selection-guide-ui/`
+- **Production:** deployed on GitHub release to `s3://parcellab-cdn/js/selection-guide-ui/v1/` (latest) and `s3://parcellab-cdn/apps/selection-guide-ui/v1/{tag}/` (versioned)
+
+Build the demo site locally:
 
 ```sh
-npm run build:pages
+npm run build
+npm run build:site
 ```
-
-Builds a static demo site to `site/`. The repository is configured to deploy this automatically via GitHub Actions on push to `main`.
-
-**Demo URL:** [https://parcellab.github.io/selection-guide-ui/](https://parcellab.github.io/selection-guide-ui/)
 
 ## Building Your Own
 
