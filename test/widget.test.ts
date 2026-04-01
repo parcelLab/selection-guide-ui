@@ -65,8 +65,8 @@ describe('SizeRecommender widget', () => {
       '.pl-size-recommender__marker',
     );
 
-    expect(root?.classList.contains('pl-size-recommender--neutral')).toBe(true);
-    expect(root?.classList.contains('pl-size-recommender--density-compact')).toBe(
+    expect(root?.classList.contains('pl-size-recommender--colored')).toBe(true);
+    expect(root?.classList.contains('pl-size-recommender--density-comfortable')).toBe(
       true,
     );
     expect(marker?.style.left).toBe('20%');

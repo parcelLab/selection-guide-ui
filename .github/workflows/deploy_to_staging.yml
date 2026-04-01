@@ -7,9 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  BOT_NAME: parcellab-dev-bot
   NODE_VERSION: 22
-  SLACK_CHANNEL_STAGING: C03BV5KJJQ7
 
 jobs:
   push_to_s3:
@@ -52,24 +50,3 @@ jobs:
           aws cloudfront create-invalidation \
             --distribution-id E3R5S2BJQI4RDS \
             --paths "/playground/selection-guide-ui/*"
-
-      - name: Set SHORT_SHA
-        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_ENV"
-
-      - name: Notify deployment
-        uses: darioblanco/slack-deployment@main
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-        with:
-          channel_id: ${{ env.SLACK_CHANNEL_STAGING }}
-          deployment_description: ${{ toJSON(github.event.head_commit.message) }}
-          deployment_name: ${{ github.event.repository.name || 'selection-guide-ui' }}
-          environment: staging
-          owner: ${{ github.event.pusher.name || env.BOT_NAME }}
-          package: ${{ github.event.repository.name || 'selection-guide-ui' }}
-          ref: ${{ github.ref }}
-          repo: ${{ github.repository }}
-          sha: ${{ github.sha }}
-          status_url: "placeholder"
-          url: "placeholder"
-          version: ${{ env.SHORT_SHA }}

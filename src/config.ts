@@ -40,19 +40,19 @@ function parseAccountId(accountId: WidgetConfig['accountId']): number {
 function parseAppearance(
   appearance: WidgetConfig['appearance'],
 ): AppearanceMode {
-  if (appearance === 'colored' || appearance === 'alert') {
+  if (appearance === 'neutral' || appearance === 'alert') {
     return appearance;
   }
 
-  return 'neutral';
+  return 'colored';
 }
 
 function parseDensity(density: WidgetConfig['density']): DensityMode {
-  return density === 'comfortable' ? 'comfortable' : 'compact';
+  return density === 'compact' ? 'compact' : 'comfortable';
 }
 
 function parseSurface(surface: WidgetConfig['surface']): SurfaceMode {
-  return surface === 'plain' ? 'plain' : 'subtle';
+  return surface === 'subtle' ? 'subtle' : 'plain';
 }
 
 function resolveProductId(config: Pick<WidgetConfig, 'productId' | 'articleName'>): string {
@@ -82,11 +82,11 @@ export function resolveConfig(
     productId,
     locale,
     messages,
-    notFoundMode: config.notFoundMode === 'true-to-size'
-      ? 'true-to-size'
+    notFoundMode: config.notFoundMode === 'empty'
+      ? 'empty'
       : config.notFoundMode === 'hidden'
         ? 'hidden'
-        : 'empty',
+        : 'true-to-size',
     apiBaseUrl: (config.apiBaseUrl ?? DEFAULT_API_BASE_URL).replace(/\/$/, ''),
     appearance: parseAppearance(config.appearance),
     density: parseDensity(config.density),
@@ -138,11 +138,11 @@ export function readConfigFromElement(
 
   const notFoundMode = dataset.notFoundMode;
   config.notFoundMode =
-    notFoundMode === 'true-to-size'
-      ? 'true-to-size'
+    notFoundMode === 'empty'
+      ? 'empty'
       : notFoundMode === 'hidden'
         ? 'hidden'
-        : 'empty';
+        : 'true-to-size';
 
   if (dataset.locale) {
     config.locale = dataset.locale;

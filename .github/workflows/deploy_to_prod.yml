@@ -4,10 +4,6 @@ on:
   release:
     types: [published]
 
-env:
-  BOT_NAME: parcellab-dev-bot
-  SLACK_CHANNEL_PROD: C03C6SP0R61
-
 jobs:
   push_to_s3:
     runs-on: ubuntu-latest
@@ -63,21 +59,3 @@ jobs:
           aws cloudfront create-invalidation \
             --distribution-id E3R5S2BJQI4RDS \
             --paths "/js/selection-guide-ui/v1/*" "/apps/selection-guide-ui/v1/*"
-
-      - name: Notify deployment
-        uses: darioblanco/slack-deployment@main
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-        with:
-          channel_id: ${{ env.SLACK_CHANNEL_PROD }}
-          deployment_description: ${{ github.event.release.name }}
-          deployment_name: ${{ github.event.repository.name || 'selection-guide-ui' }}
-          environment: prod
-          owner: ${{ github.actor }}
-          package: ${{ github.event.repository.name || 'selection-guide-ui' }}
-          ref: ${{ github.ref }}
-          repo: ${{ github.repository }}
-          sha: ${{ github.sha }}
-          status_url: "placeholder"
-          url: "placeholder"
-          version: ${{ github.event.release.tag_name }}
