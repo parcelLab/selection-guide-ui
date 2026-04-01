@@ -398,7 +398,7 @@ describe('SizeRecommender widget', () => {
     await vi.waitFor(() => {
       expect(host?.textContent).toContain('Passform');
       expect(host?.textContent).toContain('Sollte wie erwartet passen');
-      expect(host?.textContent).toContain('Faellt klein aus');
+      expect(host?.textContent).toContain('Fällt klein aus');
     });
   });
 });
