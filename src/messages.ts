@@ -1,42 +1,12 @@
 import type { WidgetMessages } from './types';
+import en from './locales/en.json';
+import de from './locales/de.json';
+import fr from './locales/fr.json';
+import it from './locales/it.json';
+import es from './locales/es.json';
 
-const EN_MESSAGES: WidgetMessages = {
-  title: 'How It Fits',
-  runsSmallLabel: 'Runs Small',
-  trueToSizeLabel: 'True to Size',
-  runsLargeLabel: 'Runs Large',
-  confidenceText: '{value}% confident based on real customer feedback',
-  loading: 'Loading fit guidance...',
-  fitCategorySmall: 'Likely to run small',
-  fitCategoryTrue: 'True to size',
-  fitCategoryLarge: 'Likely to run large',
-  fallbackTruePill: 'Likely true to size',
-  noDataPill: 'No data available',
-  errorPill: 'Temporarily unavailable',
-  recommendationHeadingSmall: 'Consider sizing up',
-  recommendationHeadingTrue: 'Should fit as expected',
-  recommendationHeadingLarge: 'Consider sizing down',
-  fallbackTrueHeading: 'Should fit as expected',
-  fallbackTrueSummary:
-    'We do not have enough customer feedback for this item yet, so this view falls back to a likely true-to-size fit.',
-  noDataHeading: 'No data available',
-  noDataSummary:
-    'We do not have enough customer feedback for this item yet.',
-  errorHeading: 'Fit guidance unavailable',
-  errorSummary:
-    'This fit recommendation is temporarily unavailable. Please try again later.',
-  fallbackSummarySmall:
-    'Customer feedback suggests this item may fit smaller than expected.',
-  fallbackSummaryTrue:
-    'Customer feedback suggests this item should fit as expected.',
-  fallbackSummaryLarge:
-    'Customer feedback suggests this item may fit larger than expected.',
-};
-
-const MESSAGE_MAP: Record<string, WidgetMessages> = {
-  en: EN_MESSAGES,
-};
+const MESSAGE_MAP: Record<string, WidgetMessages> = { en, de, fr, it, es };
 
 export function getMessages(locale: string): WidgetMessages {
-  return MESSAGE_MAP[locale] ?? EN_MESSAGES;
+  return MESSAGE_MAP[locale] ?? MESSAGE_MAP.en;
 }
